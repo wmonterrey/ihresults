@@ -148,5 +148,14 @@ INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'theme.right',
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'theme.sbposition', 'Posición Barra lateral','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'theme.sidebar', 'Barra lateral','0');
 
+/*Agregar resultado*/
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('rundate', '0', 'Fecha Corrida');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('runnumber', '0', 'No. Corrida');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('negativecontrol', '0', 'Control Negativo');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('positivecontrol', '0', 'Control Positivo');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('antigen', '0', 'Antigeno');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('restitle', '0', 'Título');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('mxcode', '0', 'Código Muestra');
 
-
+/*etiquetas comunes*/
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('lbl.select', '0', 'Seleccione');
