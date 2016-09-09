@@ -58,12 +58,12 @@
                                     <spring:message code="addres" /></a>
                             </li>
                             <li class="editres">
-                                <a href="<spring:url value="/admin/users/" htmlEscape="true "/>">
+                                <a href="<spring:url value="/results/list/" htmlEscape="true "/>">
                                     <i class="fa fa-pencil"></i>
                                     <spring:message code="editres" /></a>
                             </li>
                             <li class="delres">
-                                <a href="<spring:url value="/admin/users/" htmlEscape="true "/>">
+                                <a href="<spring:url value="/results/list/" htmlEscape="true "/>">
                                     <i class="fa fa-trash-o"></i>
                                     <spring:message code="delres" /></a>
                             </li>

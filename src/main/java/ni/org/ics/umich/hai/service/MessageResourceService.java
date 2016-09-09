@@ -65,5 +65,10 @@ public class MessageResourceService {
 		return  query.list();
 	}
 	
-	
+	public MessageResource getMessage(String key){
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM MessageResource mens where mens.messageKey = :key and mens.pasive = '0'");
+        query.setParameter("key",key);
+        return (MessageResource) query.uniqueResult();
+    }
 }

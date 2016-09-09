@@ -1,11 +1,13 @@
 package ni.org.ics.umich.hai.domain.results;
 
 import com.google.gson.annotations.Expose;
+import ni.org.ics.umich.hai.domain.BaseMetaData;
 import ni.org.ics.umich.hai.domain.audit.Auditable;
 import ni.org.ics.umich.hai.domain.catalogs.Antigeno;
 import ni.org.ics.umich.hai.users.model.UserSistema;
 import org.hibernate.annotations.ForeignKey;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "encabezado", catalog = "hai")
-public class Encabezado implements Serializable, Auditable {
+public class Encabezado extends BaseMetaData implements Serializable, Auditable {
     @Expose
     private int id;
     @Expose
@@ -30,10 +32,6 @@ public class Encabezado implements Serializable, Auditable {
     private String ctrlPositivo;
     @Expose
     private String ctrlNegativo;
-    @Expose
-    private Date fechaRegistro = new Date();
-
-    private UserSistema usuarioRegistro;
 
     @Id
     @GenericGenerator(name="idautoinc3" , strategy="increment")
@@ -47,7 +45,8 @@ public class Encabezado implements Serializable, Auditable {
         this.id = id;
     }
 
-    @Column(name = "FECHA_CORRIDA")
+    @Column(name = "FECHA_CORRIDA", nullable = false)
+    @DateTimeFormat(pattern = "dd/MM/yyyy")
     public Date getFechaCorrida() {
         return fechaCorrida;
     }
@@ -92,26 +91,6 @@ public class Encabezado implements Serializable, Auditable {
 
     public void setCtrlNegativo(String ctrlNegativo) {
         this.ctrlNegativo = ctrlNegativo;
-    }
-
-    @Column(name = "FECHA_REGISTRO", nullable = false)
-    public Date getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(Date fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "USUARIO_REGISTRO", referencedColumnName = "NOMBRE_USUARIO")
-    @ForeignKey(name = "USUARIO_ENCABEZADO_FK")
-    public UserSistema getUsuarioRegistro() {
-        return usuarioRegistro;
-    }
-
-    public void setUsuarioRegistro(UserSistema usuarioRegistro) {
-        this.usuarioRegistro = usuarioRegistro;
     }
 
     @Override

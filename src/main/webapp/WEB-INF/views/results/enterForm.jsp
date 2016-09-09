@@ -3,6 +3,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!--[if IE 8]> <html class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html class="ie9 no-js"> <![endif]-->
@@ -45,8 +46,19 @@
 						<li>
 							<i class="fa fa-home"></i>
 							<a href="<spring:url value="/" htmlEscape="true "/>"><spring:message code="home" /></a>
-							<i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/" htmlEscape="true "/>"><spring:message code="results" /></a>
-                            <i class="fa fa-angle-right"></i> <a href="<spring:url value="/admin/users/" htmlEscape="true "/>"><spring:message code="addres" /></a>
+							<i class="fa fa-angle-right"></i> <spring:message code="results" />
+                            <spring:url value="/results/editResult/{id}"
+                                        var="editUrl">
+                                <spring:param name="id" value="${encabezado.id}" />
+                            </spring:url>
+                            <c:choose>
+                                <c:when test="${editando}">
+                                    <i class="fa fa-angle-right"></i> <a href="${fn:escapeXml(editUrl)}"><spring:message code="editres" /></a>
+                                </c:when>
+                                <c:otherwise>
+                                    <i class="fa fa-angle-right"></i> <a href="<spring:url value="/results/newResult/" htmlEscape="true "/>"><spring:message code="addres" /></a>
+                                </c:otherwise>
+                            </c:choose>
 						</li>
 					</ul>
 					<!-- END PAGE TITLE & BREADCRUMB-->
@@ -54,13 +66,9 @@
 			</div>
 			<!-- END PAGE HEADER-->
 			<!-- BEGIN PAGE CONTENT-->
-			<spring:url value="/admin/users/{username}"
-				var="usuarioUrl">
-				<spring:param name="username" value="${user.username}" />
-			</spring:url>
-			<c:set var="userUpdated"><spring:message code="user.updated" /></c:set>
-			<c:set var="errorProcess"><spring:message code="process.error" /></c:set>
-			
+			<spring:url value="/results/list/"	var="listUrl"/>
+            <c:set var="eliminar"><spring:message code="confirmdelete" /></c:set>
+            <c:set var="confirmar"><spring:message code="confirm" /></c:set>
 			<div class="row">
 				<div class="col-md-12">
 					<div class="portlet">
@@ -76,7 +84,7 @@
 						<div class="portlet-body form">
 						<form action="#" autocomplete="off" id="add-result-form" class="form-horizontal">
 								<div class="form-body">
-                                    <input id="id" name="id" type="hidden" class="form-control"/>
+                                    <input id="id" name="id" type="hidden" class="form-control" value="${encabezado.id}"/>
 									<div class="alert alert-danger display-hide">
 										<button class="close" data-close="alert"></button>
 										<spring:message code="form.errors" />
@@ -91,9 +99,9 @@
                                                 </label>
                                                 <div class="col-md-8">
                                                     <div class="input-group">
-                                                        <input type="text" name="rundate" id="rundate"
-                                                               placeholder="<spring:message code="rundate"/>"
-                                                               class="form-control date-picker" data-date-end-date="+0d"/>
+                                                        <input class="form-control date-picker" data-date-end-date="+0d" type="text" name="rundate" id="rundate"
+                                                               value="<fmt:formatDate value="${encabezado.fechaCorrida}" pattern="dd/MM/yyyy" />"
+                                                               placeholder="<spring:message code="rundate"/>" />
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-calendar"></i>
                                                         </span>
@@ -107,7 +115,7 @@
                                                 </label>
                                                 <div class="col-md-6">
                                                     <div class="input-group">
-                                                        <input id="runnumber" name="runnumber" type="text" value="" class="form-control"/>
+                                                        <input id="runnumber" name="runnumber" type="text" value="${encabezado.numCorrida}" class="form-control"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-sort-numeric-asc"></i>
                                                         </span>
@@ -127,7 +135,14 @@
                                                 <select class="form-control" id="antigeno" name="antigeno">
                                                     <option value=""><spring:message code="lbl.select"/>...</option>
                                                     <c:forEach items="${antigenos}" var="antigeno">
-                                                        <option value="${antigeno.id}">${antigeno.nombre}</option>
+                                                        <c:choose>
+                                                            <c:when test="${encabezado.antigeno.id eq antigeno.id}">
+                                                                <option selected value="${antigeno.id}">${antigeno.nombre}</option>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <option value="${antigeno.id}">${antigeno.nombre}</option>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </c:forEach>
                                                 </select>
                                             </div>
@@ -141,7 +156,7 @@
                                                 </label>
                                                 <div class="col-md-6">
                                                     <div class="input-group">
-                                                        <input id="positivecontrol" name="positivecontrol" type="text" value="" class="form-control"/>
+                                                        <input id="positivecontrol" name="positivecontrol" type="text" value="${encabezado.ctrlPositivo}" class="form-control"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-sort-alpha-asc"></i>
                                                         </span>
@@ -158,7 +173,7 @@
                                                 </label>
                                                 <div class="col-md-6">
                                                     <div class="input-group">
-                                                        <input id="negativecontrol" name="negativecontrol" type="text" value="" class="form-control"/>
+                                                        <input id="negativecontrol" name="negativecontrol" type="text" value="${encabezado.ctrlNegativo}" class="form-control"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-sort-alpha-asc"></i>
                                                         </span>
@@ -172,8 +187,7 @@
 								<div class="form-actions fluid">
 									<div class="col-md-offset-6 col-md-6">
 										<button id="guardar" type="submit" class="btn btn-success"><spring:message code="save" /></button>
-						            	<a href="#" class="btn btn-danger"><spring:message code="end" /></a>
-                                        <!-- <a href="${fn:escapeXml(usuarioUrl)}" class="btn btn-danger"><spring:message code="end" /></a>-->
+						            	<a href="${fn:escapeXml(listUrl)}" class="btn btn-danger"><spring:message code="end" /></a>
 									</div>
 								</div>
 							</form>
@@ -184,6 +198,7 @@
 
             <div class="row">
                 <div class="col-md-12">
+                    <!-- BEGIN TABLE PORTLET-->
                     <div class="portlet">
                         <div class="portlet-title">
                             <div class="caption">
@@ -197,8 +212,8 @@
                         <div class="portlet-body form">
                             <form action="#" autocomplete="off" id="add-detail-form" class="form-horizontal">
                                 <div class="form-body">
-                                    <input id="idEncabezado" name="idEncabezado" type="hidden" class="form-control"/>
-
+                                    <input id="idEncabezado" name="idEncabezado" value="${encabezado.id}" type="hidden" class="form-control"/>
+                                    <input id="idDetalle" name="idDetalle" value="" type="hidden" class="form-control"/>
                                     <div class="alert alert-danger display-hide">
                                         <button class="close" data-close="alert"></button>
                                         <spring:message code="form.errors" />
@@ -238,10 +253,20 @@
                                         </div>
                                         <div class="col col-sm-12 col-md-4 col-lg-4">
                                             <div class="btn-group">
-                                                <button id="add_detail" disabled class="btn btn-info">
-                                                    <spring:message code="add" /> <i class="fa fa-plus"></i>
+                                                <button id="btnAddDetail" disabled class="btn btn-info">
+                                                    <c:choose>
+                                                        <c:when test="${editando}">
+                                                            <spring:message code="save" /> <i class="fa fa-save"></i>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <spring:message code="add" /> <i class="fa fa-plus"></i>
+                                                        </c:otherwise>
+                                                    </c:choose>
                                                 </button>
                                             </div>
+                                            <button id="btnCancelDetail" class="btn btn-warning" type="button">
+                                                    <spring:message code="cancel" /> <i class="fa fa-times"></i>
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -252,6 +277,8 @@
                                     <tr>
                                         <th class="hidden-xs" width="50%"><spring:message code="mxcode" /></th>
                                         <th class="hidden-xs" width="50%"><spring:message code="restitle" /></th>
+                                        <th><spring:message code="edit" /></th>
+                                        <th><spring:message code="delete" /></th>
                                     </tr>
                                     </thead>
                                     <tbody></tbody>
@@ -259,6 +286,29 @@
                             </div>
                         </div>
                     </div>
+                    <!-- END TABLE PORTLET-->
+                    <!-- BEGIN MODAL-->
+                    <div class="modal fade" id="basic" tabindex="-1" data-role="basic" data-backdrop="static" data-aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" data-aria-hidden="true"></button>
+                                    <div id="tituloModal"></div>
+                                </div>
+                                <div class="modal-body">
+                                    <input type=hidden id="accionUrl"/>
+                                    <div id="cuerpo"></div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal"><spring:message code="cancel" /></button>
+                                    <button type="button" id="btnConfirmDelete" class="btn btn-info" ><spring:message code="ok" /></button>
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- END MODAL -->
                 </div>
             </div>
 			<!-- END PAGE CONTENT -->
@@ -308,7 +358,7 @@
 <spring:url value="/resources/plugins/bootstrap-datepicker/js/bootstrap-datepicker.js" var="datepickerPlugin" />
 <script src="${datepickerPlugin}"></script>
 <spring:url value="/resources/plugins/bootstrap-datepicker/js/locales/bootstrap-datepicker.{languagedt}.js" var="datePickerLoc">
-    <spring:param name="languagedt" value="${pageContext.request.locale.language}" /></spring:url>
+    <spring:param name="languagedt" value="${lenguaje}" /></spring:url>
 <script src="${datePickerLoc}"></script>
 
 <!-- VALIDATOR-->
@@ -317,7 +367,7 @@
 <spring:url value="/resources/plugins/jquery-validation/dist/additional-methods.min.js" var="jQValidationAdd" />
 <script type="text/javascript" src="${jQValidationAdd}"></script>
 <spring:url value="/resources/plugins/jquery-validation/localization/messages_{language}.js" var="jQValidationLoc">
-    <spring:param name="language" value="${pageContext.request.locale.language}" />
+    <spring:param name="language" value="${lenguaje}" />
 </spring:url>
 <script src="${jQValidationLoc}"></script>
 
@@ -327,12 +377,14 @@
 <script src="${App}" type="text/javascript"></script>
 <spring:url value="/resources/scripts/utils/handleDatePickers.js" var="handleDatePickers" />
 <script src="${handleDatePickers}" type="text/javascript"></script>
-<spring:url value="/resources/scripts/results/add-result.js" var="addResultScript" />
-<script src="${addResultScript}" type="text/javascript"></script>
+<spring:url value="/resources/scripts/results/process-result.js" var="procResultScript" />
+<script src="${procResultScript}" type="text/javascript"></script>
 
-<spring:url value="/results/addResult" var="saveUrl"/>
-<spring:url value="/results/addResultDetail" var="saveDetailUrl"/>
-<spring:url value="/results/getDetailByHeader" var="getDetailUrl"/>
+<spring:url value="/results/saveResult" var="saveUrl"/>
+<spring:url value="/results/saveResultDetail" var="saveDetailUrl"/>
+<spring:url value="/results/getDetailByHeader" var="getDetailsUrl"/>
+<spring:url value="/results/deleteDetail/" var="deleteDetailUrl"/>
+<spring:url value="/results/getDetailById" var="getDetailUrl"/>
 
 <c:set var="successmessage"><spring:message code="process.success" /></c:set>
 <c:set var="errormessage"><spring:message code="process.errors" /></c:set>
@@ -340,18 +392,33 @@
 <script>
     $(function () {
         $("li.results").removeClass("open").addClass("active");
-        $("li.addres").removeClass("addres").addClass("active");
+        if ("${editando}" == 'true'){
+            $("li.editres").removeClass("editres").addClass("active");
+        }else {
+            $("li.addres").removeClass("addres").addClass("active");
+        }
     });
 </script>
 <script>
 	jQuery(document).ready(function() {
 		App.init();
 		var parametros = {saveUrl: "${saveUrl}",saveDetailUrl: "${saveDetailUrl}",
-            getDetailUrl: "${getDetailUrl}", successmessage: "${successmessage}",
-				errormessage: "${errormessage}", dataTablesLang: "${dataTablesLang}"
+            getDetailsUrl: "${getDetailsUrl}", getDetailUrl: "${getDetailUrl}", successmessage: "${successmessage}",
+				errormessage: "${errormessage}", dataTablesLang: "${dataTablesLang}",
+            confirm: "${confirmar}", deletemsg:"${eliminar}", deleteDetailUrl : "${deleteDetailUrl}"
 		};
         AddResult.init(parametros);
-        handleDatePickers("${pageContext.request.locale.language}");
+        if ("${editando}" == 'true'){
+            $('#btnAddDetail').removeAttr('disabled','disabled');
+        }
+        if ("${eliminado}"){
+            if ("${eliminado}" === 'true') {
+                toastr.success("${successmessage}", "");
+            }else{
+                toastr.error("${errormessage}", "");
+            }
+        }
+        handleDatePickers("${lenguaje}");
 
 	});
 </script>

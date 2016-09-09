@@ -1,6 +1,7 @@
 package ni.org.ics.umich.hai.domain.results;
 
 import com.google.gson.annotations.Expose;
+import ni.org.ics.umich.hai.domain.BaseMetaData;
 import ni.org.ics.umich.hai.domain.audit.Auditable;
 import ni.org.ics.umich.hai.domain.catalogs.Titulo;
 import ni.org.ics.umich.hai.users.model.UserSistema;
@@ -17,7 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "detalle", catalog = "hai")
-public class Detalle implements Serializable, Auditable {
+public class Detalle extends BaseMetaData implements Serializable, Auditable {
 
     @Expose
     private int id;
@@ -27,10 +28,6 @@ public class Detalle implements Serializable, Auditable {
     private Titulo titulo;
     @Expose
     private Encabezado encabezado;
-    @Expose
-    private Date fechaRegistro = new Date();
-
-    private UserSistema usuarioRegistro;
 
     @Id
     @GenericGenerator(name="idautoinc3" , strategy="increment")
@@ -73,26 +70,6 @@ public class Detalle implements Serializable, Auditable {
 
     public void setEncabezado(Encabezado encabezado) {
         this.encabezado = encabezado;
-    }
-
-    @Column(name = "FECHA_REGISTRO", nullable = false)
-    public Date getFechaRegistro() {
-        return fechaRegistro;
-    }
-
-    public void setFechaRegistro(Date fechaRegistro) {
-        this.fechaRegistro = fechaRegistro;
-    }
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "USUARIO_REGISTRO", referencedColumnName = "NOMBRE_USUARIO")
-    @ForeignKey(name = "USUARIO_DETALLE_FK")
-    public UserSistema getUsuarioRegistro() {
-        return usuarioRegistro;
-    }
-
-    public void setUsuarioRegistro(UserSistema usuarioRegistro) {
-        this.usuarioRegistro = usuarioRegistro;
     }
 
     @Override

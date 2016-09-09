@@ -2,11 +2,21 @@ var AddResult = function () {
     return {
 //main function to initiate the module
         init: function (parametros) {
-
-            var table  = $('#lista_muestras').DataTable({
+            var table  = $('#lista_muestras').dataTable({
                 "sDom": "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>"+
                     "t"+
                     "<'dt-toolbar-footer'<'col-sm-6 col-xs-12 hidden-xs'i><'col-xs-12 col-sm-6'p>>",
+                "aoColumns": [
+                    null, null,
+                    {
+                        "sClass":      'editDetail',
+                        "orderable":      false
+                    },
+                    {
+                        "sClass":      'delDetail',
+                        "orderable":      false
+                    }
+                ],
                 "aLengthMenu": [
                     [5, 10, 15, 20, -1],
                     [5, 10, 15, 20, "Todos"] // change per page values here
@@ -17,7 +27,16 @@ var AddResult = function () {
                     "sUrl": parametros.dataTablesLang
                 },
                 "sPaginationType": "bootstrap",
-                "bPaginate": true
+                "bPaginate": true,
+                fnDrawCallback : function() {
+                    $('.editDetail')
+                        .off("click", editDetailHandler)
+                        .on("click", editDetailHandler);
+                    $('.delDetail')
+                        .off("click", deleteDetailHandler)
+                        .on("click", deleteDetailHandler);
+
+                }
             });
 
             var form1 = $('#add-result-form');
@@ -119,6 +138,14 @@ var AddResult = function () {
                 }
             });
 
+            $('#btnConfirmDelete').click(function() {
+                ejecutarAccion();
+            });
+
+            $('#btnCancelDetail').click(function() {
+                clearDetail();
+            });
+
             function processHeader() {
                 App.blockUI();
                 $.post(parametros.saveUrl
@@ -131,7 +158,7 @@ var AddResult = function () {
                         else {
                             $('#id').val(encabezado.id);//en el form header
                             $('#idEncabezado').val(encabezado.id); // en el form detail
-                            $('#add_detail').removeAttr('disabled','disabled');
+                            $('#btnAddDetail').removeAttr('disabled','disabled');
                             toastr.success(parametros.successmessage, '');
                         }
                         $('#codigoMx').focus();
@@ -155,10 +182,10 @@ var AddResult = function () {
                         }
                         else {
                             toastr.success(parametros.successmessage, '');
-                            getDetail();
+                            getDetailsByIdHeader();
+                            clearDetail();
                         }
-                        $('#codigoMx').val('').focus();
-                        $('#titulo').val('').change();
+                        $('#codigoMx').focus();
                         App.unblockUI();
                     }
                     , 'text')
@@ -168,20 +195,70 @@ var AddResult = function () {
                     });
             }
 
-            function getDetail() {
-                $.getJSON(parametros.getDetailUrl, {
+            function editDetailHandler(){
+                var data =  $(this.innerHTML).data('id');
+                if (data != null) {
+                    getDetailById(data);
+                }
+            }
+
+            function deleteDetailHandler(){
+                var data =  $(this.innerHTML).data('id');
+                if (data != null) {
+                    $('#accionUrl').val(data);
+                    $('#tituloModal').html('<h2 class="modal-title">'+parametros.confirm+'</h2>');
+                    $('#cuerpo').html('<h3>'+parametros.deletemsg+'</h3>');
+                    $('#basic').modal('show');
+                }
+            }
+
+            function getDetailsByIdHeader() {
+                $.getJSON(parametros.getDetailsUrl, {
                     ajax: 'true',
                     idEncabezado: $("#idEncabezado").val()
                 }, function (dataToLoad) {
                     table.fnClearTable();
                     var len = Object.keys(dataToLoad).length;
                     for (var i = 0; i < len; i++) {
+                        var btnEdit = '<button type="button" class="btn btn-default btn-xs" data-id="'+dataToLoad[i].id +'" > <i class="fa fa-pencil"></i>' ;
+                        var btnDelete = '<button type="button" class="btn btn-default btn-xs" data-id="'+parametros.deleteDetailUrl+dataToLoad[i].id +'" > <i class="fa fa-trash-o"></i>' ;
                         table.fnAddData(
-                            [dataToLoad[i].codigoMx, dataToLoad[i].titulo]);
+                            [dataToLoad[i].codigoMx, dataToLoad[i].titulo, btnEdit, btnDelete]);
                     }
                 }).fail(function(jqXHR) {
                     App.unblockUI();
                 });
+            }
+
+            function getDetailById(id) {
+                $.getJSON(parametros.getDetailUrl, {
+                    ajax: 'true',
+                    id: id
+                }, function (dataToLoad) {
+                    var len = Object.keys(dataToLoad).length;
+                    if (len>0){
+                        $("#idDetalle").val(dataToLoad.id);
+                        $("#codigoMx").val(dataToLoad.codigoMx);
+                        $("#titulo").val(dataToLoad.titulo.id).change();
+                    }
+                }).fail(function(jqXHR) {
+                    App.unblockUI();
+                });
+            }
+
+            function ejecutarAccion() {
+                window.location.href = $('#accionUrl').val();
+            }
+
+            function clearDetail(){
+                $('#codigoMx').val('');
+                $('#titulo').val('').change();
+                $("#idDetalle").val('');
+            }
+
+            //cuando es edición se cargan los detalles
+            if ($("#idEncabezado").val()!=null && $("#idEncabezado").val().length>0){
+                getDetailsByIdHeader();
             }
         }
     };

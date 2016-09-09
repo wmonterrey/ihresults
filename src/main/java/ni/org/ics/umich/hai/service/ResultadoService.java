@@ -41,9 +41,38 @@ public class ResultadoService {
 
     public List<Detalle> getDetailByHeader(int idEncabezado){
         Session session = sessionFactory.getCurrentSession();
-        Query query = session.createQuery("FROM Detalle d where d.encabezado.id = :id");
+        Query query = session.createQuery("FROM Detalle d where d.encabezado.id = :id and pasive = '0'");
         query.setParameter("id",idEncabezado);
         return query.list();
     }
 
+    public boolean validateCode(String code){
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Muestra where codigo = :codigo");
+        query.setParameter("codigo",code);
+        return query.list().size()>0;
+    }
+
+    public List<Encabezado> getHeaders(){
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Encabezado where pasive = '0' ");
+        return query.list();
+    }
+
+    public Detalle getDetailById(int id){
+        Session session = sessionFactory.getCurrentSession();
+        Query query = session.createQuery("FROM Detalle where id = :id ");
+        query.setParameter("id",id);
+        return (Detalle)query.uniqueResult();
+    }
+
+    public Integer deleteDetailByIdHeader(Integer id) {
+        // Retrieve session from Hibernate
+        Session s = sessionFactory.getCurrentSession();
+        String hqlBaja = "update Detalle set pasive='1' where encabezado.id = :id  and pasive = '0' ";
+        int updateEntities = s.createQuery( hqlBaja )
+                .setParameter("id", id)
+                .executeUpdate();
+        return updateEntities;
+    }
 }

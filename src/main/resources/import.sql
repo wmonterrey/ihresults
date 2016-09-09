@@ -29,11 +29,13 @@ INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'ok', 'Aceptar
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'search', 'Buscar','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'confirm', 'Confirmar','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'please.enter', 'Favor ingresar','0');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`, `en`) VALUES ('delete', '0', 'Eliminar', 'Delete');
+
 /*Menú*/
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'home', 'Inicio','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'results', 'Solicitudes','0');
-INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'add.res', 'Agregar Resultado','0');
-INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'edit.res', 'Editar Resultado','0');
+INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'addres', 'Agregar Resultado','0');
+INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'editres', 'Editar Resultado','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'del.res', 'Borrar Resultado','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'admin', 'Administración','0');
 INSERT INTO `messages` (`messageKey`, `es`, `catPasive`) VALUES ( 'adminusers', 'Usuarios','0');
@@ -156,6 +158,8 @@ INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('positivecontro
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('antigen', '0', 'Antigeno');
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('restitle', '0', 'Título');
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('mxcode', '0', 'Código Muestra');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`, `en`) VALUES ('codenotfound', '0', 'Código de muestra no encontrado: ?', 'Sample code not found : ?');
+INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('confirmdelete', '0', '¿Eliminar registro?');
 
 /*etiquetas comunes*/
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('lbl.select', '0', 'Seleccione');
