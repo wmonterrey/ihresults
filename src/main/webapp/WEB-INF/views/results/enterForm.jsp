@@ -115,7 +115,7 @@
                                                 </label>
                                                 <div class="col-md-6">
                                                     <div class="input-group">
-                                                        <input id="runnumber" name="runnumber" type="text" value="${encabezado.numCorrida}" class="form-control"/>
+                                                        <input id="runnumber" name="runnumber" type="text" value="${encabezado.numCorrida}" class="form-control entero"/>
                                                         <span class="input-group-addon">
                                                             <i class="fa fa-sort-numeric-asc"></i>
                                                         </span>
@@ -370,7 +370,9 @@
     <spring:param name="language" value="${lenguaje}" />
 </spring:url>
 <script src="${jQValidationLoc}"></script>
-
+<!-- JQUERY INPUT MASK -->
+<spring:url value="/resources/plugins/jquery-inputmask/jquery.inputmask.bundle.min.js" var="jqueryInputMask" />
+<script src="${jqueryInputMask}"></script>
 <!-- END PAGE LEVEL PLUGINS -->
 <!-- BEGIN PAGE LEVEL SCRIPTS -->
 <spring:url value="/resources/scripts/app.js" var="App" />
@@ -419,6 +421,12 @@
             }
         }
         handleDatePickers("${lenguaje}");
+
+        $(".entero").inputmask({
+            "mask": "9",
+            "repeat": 6,
+            "greedy": false
+        });
 
 	});
 </script>
