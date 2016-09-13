@@ -161,5 +161,7 @@ INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('mxcode', '0', 
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`, `en`) VALUES ('codenotfound', '0', 'Código de muestra no encontrado: ?', 'Sample code not found : ?');
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('confirmdelete', '0', '¿Eliminar registro?');
 
+
+
 /*etiquetas comunes*/
 INSERT INTO `messages` (`messageKey`, `catPasive`, `es`) VALUES ('lbl.select', '0', 'Seleccione');
