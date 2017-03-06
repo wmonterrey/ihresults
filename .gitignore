@@ -48,3 +48,4 @@ Temporary Items
 target/classes/import.sql
 target/m2e-wtp/web-resources/META-INF/maven/ni.org.ics.umich.hai/hai/pom.properties
 .gitignore
+target/
